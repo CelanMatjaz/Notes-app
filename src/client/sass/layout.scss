@@ -1,0 +1,32 @@
+.navbar{
+    width: 100%;
+    height: 60px;
+    background-color: deepskyblue;
+    color: white !important;
+    box-shadow: #aaa 1px 0 1px; 
+
+    a{
+        text-decoration: none;
+        color: white;
+        font-size: 30px;
+        display: inline-block;
+        padding: 12px;
+        border: 3px solid deepskyblue;
+        border-left: none;
+        border-right: none;
+        height: 60px;
+
+        &.active{            
+            border-bottom-color: #fff;
+        }
+    }
+}
+
+.right{
+    float: right !important;
+}
+
+.left{
+    float: left !important;
+}
+
