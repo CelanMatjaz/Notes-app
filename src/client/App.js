@@ -1,4 +1,7 @@
 import React from 'react';
+import StateProvider from './state/StateProvider';
+import { ApolloProvider } from 'react-apollo';
+import client from './apolloClient';
 
 //Routes
 import Routes from './Routes';
@@ -7,9 +10,11 @@ import Routes from './Routes';
 
 const App = () => {       
     return (
-        <div>
-            <Routes/>
-        </div>
+        <ApolloProvider client={client}>
+            <StateProvider>
+                <Routes/>
+            </StateProvider>
+        </ApolloProvider>
     );
 }
 

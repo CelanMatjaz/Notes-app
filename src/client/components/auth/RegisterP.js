@@ -6,11 +6,11 @@ import Message from '../layout/Message';
 
 const RegisterContainer = props => {
     const { email, password, passwordRepeat, name } = props.data;
-    const { handleChange: { setEmail, setPassword, setPasswordRepeat, setName }, handleSubmit, error, message } = props;
+    const { handleChange: { setEmail, setPassword, setPasswordRepeat, setName }, handleSubmit, errors, message } = props;
     return (
         <div className="form form-auth">
             <form onSubmit={handleSubmit}>
-                {error && <Message type="danger" message={error}/>}
+                {errors && errors.length > 0 && errors.map((error, i) => <Message type="danger" message={error} key={i}/>)}
                 {message && <Message type="success" message={message}/>}
                 <h1>Register</h1>                
                 <label htmlFor="email">Email</label> <br/>

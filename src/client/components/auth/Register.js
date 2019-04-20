@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 
 import RegisterP from './RegisterP';
+
+//Mutations
+import { registerMutation } from '../../queries/auth';
 
 const Register = props => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState([]);
     const [message, setMessage] = useState(null);
     
     const handleSubmit = async event => {
@@ -18,24 +20,25 @@ const Register = props => {
         const data = await props.registerMutation({
             variables: {
                 email,
+                name,
                 password,
                 passwordRepeat
             }
         });
-        let { error, message } = data.data.register;
-        setError(error);
-        setMessage(message);
+        let { errors, msg } = data.data.registerUser;
+        setErrors(errors);
+        setMessage(msg);
     }
-    
-    //if(!props.isEmpty) return <Redirect to="/"/>;	
 
     return <RegisterP 
         data={{email, password, passwordRepeat, name}} 
         handleChange={{ setEmail, setPassword, setPasswordRepeat, setName }} 
         handleSubmit={handleSubmit}
-        error={error}
+        errors={errors}
         message={message}
     />
 }
 
-export default Register;
+export default graphql(
+    registerMutation, { name: 'registerMutation' }
+)(Register);

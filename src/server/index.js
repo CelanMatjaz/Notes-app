@@ -7,13 +7,9 @@ import graphqlHTTP from 'express-graphql';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
 
 //Main component import
 import  App from '../client/App';
-
-//Redux store import
-import store from '../shared/store';
 
 //GraphQL schema
 import schema from './database/GraphQL/schema';
@@ -32,7 +28,6 @@ app.use('/graphql', graphqlHTTP(req => ({
 })));
 
 app.get('/users', async(req, res) => {
-    //await User.deleteMany({})
     res.json(await User.find({}))
 })
 
@@ -40,13 +35,11 @@ const files = fs.readdirSync('./public');
 
 app.listen(2000);
 
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
     const markup = renderToString(
-        <Provider store={store}>
-            <Router location={req.url} context={{}}>
-                <App/>
-            </Router>
-        </Provider>
+        <Router location={req.url} context={{}}>
+            <App/>
+        </Router>
     );
 
     res.send(`

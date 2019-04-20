@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { graphql } from 'react-apollo';
-import { connect } from 'react-redux';
 
 //Components
 import LoginP from './LoginP';
+import { useAppState } from '../../state/state.context';
+
+//Queries
+import { loginMutation } from '../../queries/auth';
 
 const Login = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const {state, dispatch} = useAppState();
+    
+    if(!state.isEmpty) return <Redirect to="/notes"/>
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -19,17 +25,17 @@ const Login = props => {
                 password: password
             }
         });
-        let { error, token } = data.data.login;
+        let { error, token } = data.data.loginUser;
         if(error) setError(error);
         if(token){
-            props.login(token);
-            props.history.push('/');
+            dispatch({ type: 0, payload: { token } });
+            props.history.push('/notes');
         }
-    }
-    												
-    //if(!props.isEmpty) return <Redirect to={'/'}/>;    
+    } 
 
     return <LoginP data={{email, password}} handleChange={{setEmail, setPassword}} handleSubmit={handleSubmit} error={error}/>
 }
 
-export default Login;
+export default graphql(
+    loginMutation, { name: 'loginMutation' }
+)(Login);

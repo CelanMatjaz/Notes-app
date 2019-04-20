@@ -106,9 +106,10 @@ const rootMutation = new GraphQLObjectType({
             },
             resolve: async (parent, args) => {
                 const { errors } = loginCheck(args);
-                if(errors) return { errors };                
+                if(errors) return { errors };
                 const { email, password } = args;
                 const foundUser = await User.findOne({ email });
+                console.log(foundUser.password === bcrypt.hashSync(password));
                 if(foundUser && bcrypt.compareSync(password,foundUser.password)){
                     const token = await jwt.sign({ data: {
                         id: foundUser._id,
