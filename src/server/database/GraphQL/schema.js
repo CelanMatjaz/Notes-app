@@ -25,12 +25,13 @@ const UserType = new GraphQLObjectType({
 
 const NoteType = new GraphQLObjectType({
     name: 'Note',
-    args: { id: { type: GraphQLID } },
     fields: () => ({
         userId: { type: GraphQLID },
+        title: { type: GraphQLString },
         note: { type: GraphQLString },
         date: { type: GraphQLString },
-        dateEdited: { type: GraphQLString }
+        dateEdited: { type: GraphQLString },
+        id: { tyoe: GraphQLID }
     })
 });
 
@@ -57,15 +58,16 @@ const rootQuery = new GraphQLObjectType({
         Note: {
             type: NoteType,
             args: { userId: { type: GraphQLID } },
-            resolve: async (parent, { userId }) => {
-                return await Note.findById(userId);
+            resolve: async (parent, args, context) => {
+                if(!context.user) return null;
+                return await Note.findOne({ userId: id });
             }
         },
         Notes: {
             type: new GraphQLList(NoteType),
-            args: { userId: { type: GraphQLID } },
-            resolve: async (parent, { userId }) => {
-                return await Note.find({ userId: userId });
+            resolve: async (parent, args, context) => {
+                if(!context.user) return null;
+                return await Note.find({ userId: id });
             }
         }
     }
@@ -78,7 +80,6 @@ const rootMutation = new GraphQLObjectType({
         registerUser: {
             type: ResponseType,
             args: {
-                name: { type: GraphQLString },
                 email: { type: GraphQLString },
                 password: { type: GraphQLString },
                 passwordRepeat: { type: GraphQLString },

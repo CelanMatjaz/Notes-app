@@ -9,7 +9,6 @@ import { registerMutation } from '../../queries/auth';
 
 const Register = props => {
     const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [errors, setErrors] = useState([]);
@@ -20,7 +19,6 @@ const Register = props => {
         const data = await props.registerMutation({
             variables: {
                 email,
-                name,
                 password,
                 passwordRepeat
             }
@@ -31,8 +29,8 @@ const Register = props => {
     }
 
     return <RegisterP 
-        data={{email, password, passwordRepeat, name}} 
-        handleChange={{ setEmail, setPassword, setPasswordRepeat, setName }} 
+        data={{email, password, passwordRepeat}} 
+        handleChange={{ setEmail, setPassword, setPasswordRepeat }} 
         handleSubmit={handleSubmit}
         errors={errors}
         message={message}

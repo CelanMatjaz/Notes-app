@@ -5,10 +5,13 @@
     color: white !important;
     box-shadow: #aaa 1px 0 1px; 
 
+    & *{
+        font-size: 22px !important;
+    }
+
     a{
         text-decoration: none;
         color: white;
-        font-size: 30px;
         display: inline-block;
         padding: 12px;
         border: 3px solid deepskyblue;
@@ -20,6 +23,8 @@
             border-bottom-color: #fff;
         }
     }
+
+
 }
 
 .right{
@@ -29,4 +34,5 @@
 .left{
     float: left !important;
 }
+
 

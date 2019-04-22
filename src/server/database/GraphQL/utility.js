@@ -2,11 +2,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export const registerCheck = args => {
-    const { name, email, password, passwordRepeat } = args;
+    const { email, password, passwordRepeat } = args;
     const errors = [];
 
-    if(!name || !email || !password || !passwordRepeat){
-        if(!name) errors.push('Name is missing');
+    if(!email || !password || !passwordRepeat){
         if(!email) errors.push('Email is missing');
         if(!password) errors.push('Password is missing');        
         if(!passwordRepeat) errors.push('Password repeat is missing');
@@ -19,7 +18,6 @@ export const registerCheck = args => {
     if(errors.length === 0) 
         return {
             newUser: {
-                name,
                 email
             }
         }

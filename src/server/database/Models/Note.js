@@ -17,6 +17,10 @@ const noteSchema = new Schema({
     dateEdited: {
         type: Date,
         default: null
+    },
+    title: {
+        type: String,
+        default: 'No title'
     }
 });
 

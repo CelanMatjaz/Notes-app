@@ -1,19 +1,22 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAppState } from '../../state/state.context';
 
 const Navbar = ({ name }) => {
     const { state, dispatch } = useAppState();
-    const { isEmpty } = state;
 
-    const logout = () => {
+    const logout = e => {
+        e.preventDefault();
         dispatch({type: 1});
     }
 
     return (
         <div className="navbar">
             <div className="container">
-                <div className="left">{name || 'Anonymous'}</div>
-                {!isEmpty && <button onClick={logout}>Logout</button>}
+                <div className="right">
+                    <Link to="new-note">New note</Link>
+                    <a onClick={logout} href="#" >Logout</a>
+                </div>
             </div>
         </div>
     );

@@ -7,7 +7,6 @@ export const types = {
 
 
 export const reducer = (state, { type, payload }) => {
-    console.log(type);
     switch(type){
         case types.LOGIN:
             localStorage.setItem('token', payload.token);

@@ -21,15 +21,6 @@ const RegisterContainer = props => {
                     onChange={e => setEmail(e.target.value)} 
                     required
                 /><br/>
-
-                <label htmlFor="name">Display name</label> <br/>
-                <input 
-                    type="text" 
-                    id="name" 
-                    value={name} 
-                    onChange={e => setName(e.target.value)} 
-                    required
-                /><br/>
                 
                 <label htmlFor="password">Password</label> <br/>
                 <input 
