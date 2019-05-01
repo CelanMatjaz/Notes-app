@@ -10,12 +10,11 @@ import { notesQuery } from '../../queries/notes';
 
 const NoteList = props => {
     const { notesQuery: { Notes, error, loading } } = props;
-    console.log(props);
     const notes = Notes ? Notes.map(note => <Note key={note.id} note={note}/>) : [];
     return (
         <div className="note-list">
             {notes}
-            <NewNote/>
+            {!loading && <NewNote/>}
         </div>
     );
 };

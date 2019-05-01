@@ -13,23 +13,40 @@ import  App from '../client/App';
 
 //GraphQL schema
 import schema from './database/GraphQL/schema';
+import { checkForToken } from './database/GraphQL/utility';
 
 import User from './database/Models/User';
+import Note from './database/Models/Note';
 
 const app = express();
 app.use(express.static('public'));
 app.use(express.static('images'));
-app.use('/graphql', graphqlHTTP(req => ({
-    graphiql: true,
+app.use('/graphql', checkForToken, graphqlHTTP(req => ({
     schema,
+    graphiql: true,
     context: {
         user: req.user
     }
 })));
 
+app.get('/add', async(req, res) => {
+    const newNote = new Note({
+        userId: '5cbb860f4d887f4cb8110a44',
+        note: 'new note',
+        date: new Date(),
+        title: 'Title'
+    });
+    res.json(await newNote.save());
+
+});
+
+app.get('/notess', async(req, res) => {
+    res.json(await Note.find({}));
+});
+
 app.get('/users', async(req, res) => {
-    res.json(await User.find({}))
-})
+    res.json(await User.find({}));
+});
 
 const files = fs.readdirSync('./public');
 

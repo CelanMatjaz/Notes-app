@@ -13,16 +13,6 @@ import Note from '../Models/Note';
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: () => ({
-        email: { type: GraphQLString },
-        firstName: { type: GraphQLString },
-        lastName: { type: GraphQLString }
-    })
-});
-
 const NoteType = new GraphQLObjectType({
     name: 'Note',
     fields: () => ({
@@ -31,9 +21,20 @@ const NoteType = new GraphQLObjectType({
         note: { type: GraphQLString },
         date: { type: GraphQLString },
         dateEdited: { type: GraphQLString },
-        id: { tyoe: GraphQLID }
+        id: { type: GraphQLID }
     })
 });
+
+const UserType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+        email: { type: GraphQLString },
+        firstName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+        id: { type: GraphQLID }
+    })
+});
+
 
 const ResponseType = new GraphQLObjectType({
     name: 'Response',
@@ -66,8 +67,7 @@ const rootQuery = new GraphQLObjectType({
         Notes: {
             type: new GraphQLList(NoteType),
             resolve: async (parent, args, context) => {
-                if(!context.user) return null;
-                return await Note.find({ userId: id });
+                return await Note.find({ userId: context.user.id });
             }
         }
     }
@@ -110,7 +110,6 @@ const rootMutation = new GraphQLObjectType({
                 if(errors) return { errors };
                 const { email, password } = args;
                 const foundUser = await User.findOne({ email });
-                console.log(foundUser.password === bcrypt.hashSync(password));
                 if(foundUser && bcrypt.compareSync(password,foundUser.password)){
                     const token = await jwt.sign({ data: {
                         id: foundUser._id,
@@ -127,20 +126,25 @@ const rootMutation = new GraphQLObjectType({
             }
         },
         addNote: {
-            type: NoteType,
-            args: { note: { type: GraphQLString } },
-            resolve: async (parent, { note }, { user: { id } }) => {
-                const user = User.findOne({ id });
-                if(!user) return null;
+            type: ResponseType,
+            args: { note: { type: GraphQLString }, title: { type: GraphQLString } },
+            resolve: async (parent, { note, title }, context) => {
+                if(!context.user) return { errors: ['Not authorized'] };
+                const user = User.findOne({ id: context.user.id });
+                if(!user) return { errors: ['Not authorized'] };
                 const newNote = new Note({
+                    userId: context.user.id,
+                    title,
                     note,
-                    userId: user._id,
+                    date: new Date()
                 });
                 try{
-                    return await newNote.save();
+                    await newNote.save();
+                    return { msg: 'New note added' };
                 }
                 catch(e){
-                    return null;
+                    console.log(e);
+                    return { errors: ['Error with inserting into database'] };
                 }
             }
         },
@@ -185,7 +189,7 @@ const rootMutation = new GraphQLObjectType({
             }
         }
     }
-})
+});
 
 export default new GraphQLSchema({
     query: rootQuery,

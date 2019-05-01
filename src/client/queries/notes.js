@@ -11,3 +11,12 @@ export const notesQuery = gql`
         }
     }
 `;
+
+export const addNote = gql`
+    mutation addNote($title: String!, $note: String!){
+        addNote(title: $title, note: $note){
+            msg
+            errors
+        }
+    }
+`;

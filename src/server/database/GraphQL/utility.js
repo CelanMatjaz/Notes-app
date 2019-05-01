@@ -47,7 +47,7 @@ export const loginCheck = args => {
 
 export const checkForToken = async (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if(authHeader.startsWith('Bearer ')){
+    if(authHeader && authHeader.startsWith('Bearer ')){
         const token = authHeader.split(' ')[1];
         if(token){
             req.user = await jwt.verify(token, process.env.SECRET).data;
